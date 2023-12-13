@@ -11,10 +11,10 @@ import pyopenjtalk
 from fastapi import HTTPException
 from pydantic import conint
 
+from .default_dict import default_csv
 from .model import UserDictWord, WordTypes
 from .part_of_speech_data import MAX_PRIORITY, MIN_PRIORITY, part_of_speech_data
 from .utility import engine_root, get_save_dir, mutex_wrapper
-from .default_dict import default_csv
 
 root_dir = engine_root()
 save_dir = get_save_dir()
