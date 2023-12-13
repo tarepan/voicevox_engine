@@ -14,6 +14,7 @@ from pydantic import conint
 from .model import UserDictWord, WordTypes
 from .part_of_speech_data import MAX_PRIORITY, MIN_PRIORITY, part_of_speech_data
 from .utility import engine_root, get_save_dir, mutex_wrapper
+from .default_dict import default_csv
 
 root_dir = engine_root()
 save_dir = get_save_dir()
@@ -85,13 +86,7 @@ def update_dict(
         csv_text = ""
 
         # デフォルト辞書データの追加
-        if not default_dict_path.is_file():
-            print("Warning: Cannot find default dictionary.", file=sys.stderr)
-            return
-        default_dict = default_dict_path.read_text(encoding="utf-8")
-        if default_dict == default_dict.rstrip():
-            default_dict += "\n"
-        csv_text += default_dict
+        csv_text += default_csv
 
         # ユーザー辞書データの追加
         user_dict = read_dict(user_dict_path=user_dict_path)
