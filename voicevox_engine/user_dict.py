@@ -22,7 +22,7 @@ save_dir = get_save_dir()
 if not save_dir.is_dir():
     save_dir.mkdir(parents=True)
 
-default_dict_path = root_dir / "default.csv"  # VOICEVOXデフォルト辞書ファイルのパス
+default_dict_path = root_dir / "not_exist.csv"  # VOICEVOXデフォルト辞書ファイルのパス
 user_dict_path = save_dir / "user_dict.json"  # ユーザー辞書ファイルのパス
 compiled_dict_path = save_dir / "user.dic"  # コンパイル済み辞書ファイルのパス
 
