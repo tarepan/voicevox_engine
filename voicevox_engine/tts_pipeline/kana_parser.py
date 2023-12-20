@@ -17,7 +17,7 @@ NOTE: ユーザー向け案内 `https://github.com/VOICEVOX/voicevox_engine/blob
 from typing import List, Optional
 
 from ..model import AccentPhrase, Mora, ParseKanaError, ParseKanaErrorCode
-from .mora_list import Consonant, Vowel, openjtalk_text2mora
+from .mora_list import Consonant, Vowel, mora_normal_kana_to_phoneme
 
 _LOOP_LIMIT = 300
 
@@ -28,17 +28,16 @@ _NOPAUSE_DELIMITER = "/"  # ポーズ無しアクセント句境界
 _PAUSE_DELIMITER = "、"  # ポーズ有りアクセント句境界
 _WIDE_INTERROGATION_MARK = "？"  # 疑問形
 
-# AquesTalk風記法とモーラの対応
-_text2mora_with_unvoice: dict[str, Mora] = {}
-for text, (consonant_str, vowel_str) in openjtalk_text2mora.items():
-
+# AquesTalk風記法とモーラの対応（無声化モーラを含む）
+_kana2mora: dict[str, Mora] = {}
+# 対応辞書を構築する
+for normal_kana, (consonant_str, vowel_str) in mora_normal_kana_to_phoneme.items():
     # 子音無しの表現を `""` から `None` へ変換する
     consonant: Consonant | None = consonant_str if consonant_str != "" else None
     consonant_length = 0 if consonant_str != "" else None
-
-    # 対応辞書を生成する（音素長・音高 0 初期化、疑問形 off 初期化）
-    _text2mora_with_unvoice[text] = Mora(
-        text=text,
+    # モーラを登録する（音素長・音高 0 初期化、疑問形 off 初期化）
+    _kana2mora[normal_kana] = Mora(
+        text=normal_kana,
         consonant=consonant,
         consonant_length=consonant_length,
         vowel=vowel_str,
@@ -49,8 +48,8 @@ for text, (consonant_str, vowel_str) in openjtalk_text2mora.items():
     if vowel_str in ["a", "i", "u", "e", "o"]:
         # 「`_` で無声化」の実装。例: "_ホ" -> "hO"
         unvoiced_vowel: Vowel = vowel_str.upper()  # type: ignore   型推論が不完全
-        _text2mora_with_unvoice[_UNVOICE_SYMBOL + text] = Mora(
-            text=text,
+        _kana2mora[_UNVOICE_SYMBOL + normal_kana] = Mora(
+            text=normal_kana,
             consonant=consonant,
             consonant_length=consonant_length,
             vowel=unvoiced_vowel,
@@ -80,7 +79,7 @@ def _text_to_accent_phrase(phrase: str) -> AccentPhrase:
 
     base_index = 0  # パース開始位置。ここから右の文字列をstackに詰めていく。
     stack = ""  # 保留中の文字列
-    matched_text: Optional[str] = None  # 保留中の文字列内で最後にマッチした仮名
+    matched_mora_kana: Optional[str] = None  # 保留中の文字列内で最後にマッチしたAquesTalk風記法テキスト
 
     outer_loop = 0
     while base_index < len(phrase):
@@ -106,16 +105,16 @@ def _text_to_accent_phrase(phrase: str) -> AccentPhrase:
             if phrase[watch_index] == _ACCENT_SYMBOL:
                 break
             stack += phrase[watch_index]
-            if stack in _text2mora_with_unvoice:
-                matched_text = stack
-        if matched_text is None:
+            if stack in _kana2mora:
+                matched_mora_kana = stack
+        if matched_mora_kana is None:
             raise ParseKanaError(ParseKanaErrorCode.UNKNOWN_TEXT, text=stack)
         # push mora
         else:
-            moras.append(_text2mora_with_unvoice[matched_text].copy(deep=True))
-            base_index += len(matched_text)
+            moras.append(_kana2mora[matched_mora_kana].copy(deep=True))
+            base_index += len(matched_mora_kana)
             stack = ""
-            matched_text = None
+            matched_mora_kana = None
         if outer_loop > _LOOP_LIMIT:
             raise ParseKanaError(ParseKanaErrorCode.INFINITE_LOOP)
     if accent_index is None:
