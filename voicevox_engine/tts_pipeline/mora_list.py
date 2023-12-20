@@ -41,7 +41,48 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-_mora_list_minimum: list[tuple[str, str, str]] = [
+
+from typing import Literal
+
+ConsonantStr = Literal[
+    "",
+    "b",
+    "by",
+    "ch",
+    "d",
+    "dy",
+    "f",
+    "g",
+    "gw",
+    "gy",
+    "h",
+    "hy",
+    "j",
+    "k",
+    "kw",
+    "ky",
+    "m",
+    "my",
+    "n",
+    "ny",
+    "p",
+    "py",
+    "r",
+    "ry",
+    "s",
+    "sh",
+    "t",
+    "ts",
+    "ty",
+    "v",
+    "w",
+    "y",
+    "z",
+]
+VowelStr = Literal["N", "a", "cl", "e", "i", "o", "u"]
+
+
+_mora_list_minimum: list[tuple[str, ConsonantStr, VowelStr]] = [
     ("ヴォ", "v", "o"),
     ("ヴェ", "v", "e"),
     ("ヴィ", "v", "i"),
@@ -188,7 +229,7 @@ _mora_list_minimum: list[tuple[str, str, str]] = [
     ("イ", "", "i"),
     ("ア", "", "a"),
 ]
-_mora_list_additional: list[tuple[str, str, str]] = [
+_mora_list_additional: list[tuple[str, ConsonantStr, VowelStr]] = [
     ("ヴョ", "by", "o"),
     ("ヴュ", "by", "u"),
     ("ヴャ", "by", "a"),
@@ -216,3 +257,18 @@ openjtalk_text2mora = {
     text: (consonant, vowel)
     for [text, consonant, vowel] in _mora_list_minimum + _mora_list_additional
 }
+
+
+if __name__ == "__main__":
+    # モーラリストから母音を抽出する
+    vowels = list(
+        set(map(lambda triplet: triplet[2], _mora_list_minimum + _mora_list_additional))
+    )
+    vowels.sort()
+    print(vowels)
+
+    consonants = list(
+        set(map(lambda triplet: triplet[1], _mora_list_minimum + _mora_list_additional))
+    )
+    consonants.sort()
+    print(consonants)
