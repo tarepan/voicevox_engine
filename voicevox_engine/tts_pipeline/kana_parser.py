@@ -17,7 +17,7 @@ NOTE: ユーザー向け案内 `https://github.com/VOICEVOX/voicevox_engine/blob
 from typing import List, Optional
 
 from ..model import AccentPhrase, Mora, ParseKanaError, ParseKanaErrorCode
-from .mora_list import openjtalk_text2mora
+from .mora_list import Consonant, Vowel, openjtalk_text2mora
 
 _LOOP_LIMIT = 300
 
@@ -28,26 +28,32 @@ _NOPAUSE_DELIMITER = "/"  # ポーズ無しアクセント句境界
 _PAUSE_DELIMITER = "、"  # ポーズ有りアクセント句境界
 _WIDE_INTERROGATION_MARK = "？"  # 疑問形
 
-# AquesTalk風記法とモーラの対応（音素長・音高 0 初期化、疑問形 off 初期化）
-_text2mora_with_unvoice = {}
-for text, (consonant, vowel) in openjtalk_text2mora.items():
+# AquesTalk風記法とモーラの対応
+_text2mora_with_unvoice: dict[str, Mora] = {}
+for text, (consonant_str, vowel_str) in openjtalk_text2mora.items():
+
+    # 子音無しの表現を `""` から `None` へ変換する
+    consonant: Consonant | None = consonant_str if consonant_str != "" else None
+    consonant_length = 0 if consonant_str != "" else None
+
+    # 対応辞書を生成する（音素長・音高 0 初期化、疑問形 off 初期化）
     _text2mora_with_unvoice[text] = Mora(
         text=text,
-        consonant=consonant if len(consonant) > 0 else None,
-        consonant_length=0 if len(consonant) > 0 else None,
-        vowel=vowel,
+        consonant=consonant,
+        consonant_length=consonant_length,
+        vowel=vowel_str,
         vowel_length=0,
         pitch=0,
         is_interrogative=False,
     )
-    if vowel in ["a", "i", "u", "e", "o"]:
-        # 「`_` で無声化」の実装
-        # 例: "_ホ" -> "hO"
+    if vowel_str in ["a", "i", "u", "e", "o"]:
+        # 「`_` で無声化」の実装。例: "_ホ" -> "hO"
+        unvoiced_vowel: Vowel = vowel_str.upper()  # type: ignore   型推論が不完全
         _text2mora_with_unvoice[_UNVOICE_SYMBOL + text] = Mora(
             text=text,
-            consonant=consonant if len(consonant) > 0 else None,
-            consonant_length=0 if len(consonant) > 0 else None,
-            vowel=vowel.upper(),
+            consonant=consonant,
+            consonant_length=consonant_length,
+            vowel=unvoiced_vowel,
             vowel_length=0,
             pitch=0,
             is_interrogative=False,
@@ -157,7 +163,7 @@ def parse_kana(text: str) -> List[AccentPhrase]:
                 # 疑問形はモーラでなくアクセント句属性で表現
                 phrase = phrase.replace(_WIDE_INTERROGATION_MARK, "")
 
-            accent_phrase: AccentPhrase = _text_to_accent_phrase(phrase)
+            accent_phrase = _text_to_accent_phrase(phrase)
 
             # 「`、` で無音付き区切り」の実装
             if i < len(text) and text[i] == _PAUSE_DELIMITER:

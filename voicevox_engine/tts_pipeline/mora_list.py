@@ -44,8 +44,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 from typing import Literal
 
-ConsonantStr = Literal[
-    "",
+Consonant = Literal[
     "b",
     "by",
     "ch",
@@ -79,8 +78,10 @@ ConsonantStr = Literal[
     "y",
     "z",
 ]
-VowelStr = Literal["N", "a", "cl", "e", "i", "o", "u"]
+ConsonantStr = Consonant | Literal[""]
 
+VowelStr = Literal["N", "a", "cl", "e", "i", "o", "u"]
+Vowel = VowelStr | Literal["A", "E", "I", "O", "U"]
 
 _mora_list_minimum: list[tuple[str, ConsonantStr, VowelStr]] = [
     ("ヴォ", "v", "o"),
