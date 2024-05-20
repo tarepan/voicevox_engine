@@ -25,7 +25,6 @@ on:
         default: false
 
 env:
-  PYTHON_VERSION: "3.11.3"
   VOICEVOX_RESOURCE_VERSION: "0.19.0"
   VOICEVOX_CORE_VERSION: "0.15.3"
 
@@ -110,8 +109,10 @@ jobs:
         run: |
           echo "package_name=voicevox_engine-${{ matrix.target }}-${{ needs.config.outputs.version }}" >> "$GITHUB_OUTPUT"
 
-      - name: <Setup> Check out the repository
-        uses: actions/checkout@v4
+      - name: <Setup> Set up common environment
+        uses: ./.github/actions/common-setup
+        with:
+          # install-python: false
 
       # NOTE: The default 'sed' and 'split' of macOS is BSD 'sed' and 'split'.
       #       There is a difference in specification between BSD 'sed' and 'split' and GNU 'sed' and 'split',
@@ -285,7 +286,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ steps.common-setup.outputs.python-version }}
           architecture: ${{ matrix.architecture }}
           cache: pip
 

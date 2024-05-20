@@ -1,0 +1,24 @@
+name: 'common-setup'
+
+outputs:
+  python-version:
+    description: "Python version"
+    value: ${{ steps.export-python-version.outputs.python-version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: <Setup> Check out the repository
+      uses: actions/checkout@v4
+
+    - name: <Setup> Set up Python
+      if: # ! install-python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11.3" # 全 workflow の Python バージョンをこの値で一括管理している
+        cache: pip
+
+    - name: <Setup> Export Python version
+      id: export-python-version
+      run: echo "python-version=3.11.3" >> $GITHUB_OUTPUT # NOTE: 上の `python-version` と必ず一致させる
+      shell: bash

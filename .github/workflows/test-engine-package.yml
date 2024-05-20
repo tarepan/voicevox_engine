@@ -21,7 +21,6 @@ on:
         required: false
 
 env:
-  PYTHON_VERSION: "3.11.3"
   REPO_URL:
     |- # repo_url指定時はrepo_urlを、それ以外はgithubのリポジトリURLを使用
     ${{ (github.event.inputs || inputs).repo_url || format('{0}/{1}', github.server_url, github.repository) }}
@@ -54,20 +53,14 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: <Setup> Set up common environment
+        uses: ./.github/actions/common-setup
+
       - name: <Setup> Declare variables
         id: vars
         run: |
           echo "release_url=${{ env.REPO_URL }}/releases/download/${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
           echo "package_name=voicevox_engine-${{ matrix.target }}-${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
-
-      - name: <Setup> Check out the repository
-        uses: actions/checkout@v4
-
-      - name: <Setup> Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
 
       - name: <Setup> Download ENGINE package
         run: |
