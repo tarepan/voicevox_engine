@@ -6,7 +6,7 @@ MAX_PRIORITY = 10
 
 
 @dataclass(frozen=True)
-class PartOfSpeechDetail:
+class _PartOfSpeechDetail:
     """品詞ごとの情報"""
 
     part_of_speech: str  # 品詞
@@ -30,8 +30,8 @@ class WordTypes(str, Enum):
     SUFFIX = "SUFFIX"
 
 
-part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {
-    WordTypes.PROPER_NOUN: PartOfSpeechDetail(
+part_of_speech_data: dict[WordTypes, _PartOfSpeechDetail] = {
+    WordTypes.PROPER_NOUN: _PartOfSpeechDetail(
         part_of_speech="名詞",
         part_of_speech_detail_1="固有名詞",
         part_of_speech_detail_2="一般",
@@ -59,7 +59,7 @@ part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {
             "C5",
         ],
     ),
-    WordTypes.COMMON_NOUN: PartOfSpeechDetail(
+    WordTypes.COMMON_NOUN: _PartOfSpeechDetail(
         part_of_speech="名詞",
         part_of_speech_detail_1="一般",
         part_of_speech_detail_2="*",
@@ -87,7 +87,7 @@ part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {
             "C5",
         ],
     ),
-    WordTypes.VERB: PartOfSpeechDetail(
+    WordTypes.VERB: _PartOfSpeechDetail(
         part_of_speech="動詞",
         part_of_speech_detail_1="自立",
         part_of_speech_detail_2="*",
@@ -110,7 +110,7 @@ part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {
             "*",
         ],
     ),
-    WordTypes.ADJECTIVE: PartOfSpeechDetail(
+    WordTypes.ADJECTIVE: _PartOfSpeechDetail(
         part_of_speech="形容詞",
         part_of_speech_detail_1="自立",
         part_of_speech_detail_2="*",
@@ -133,7 +133,7 @@ part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {
             "*",
         ],
     ),
-    WordTypes.SUFFIX: PartOfSpeechDetail(
+    WordTypes.SUFFIX: _PartOfSpeechDetail(
         part_of_speech="名詞",
         part_of_speech_detail_1="接尾",
         part_of_speech_detail_2="一般",
