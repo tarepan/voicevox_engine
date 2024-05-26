@@ -19,9 +19,7 @@ class _PartOfSpeechDetail:
 
 
 class WordTypes(str, Enum):
-    """
-    fastapiでword_type引数を検証する時に使用するクラス
-    """
+    """言葉の種類。PROPER_NOUN（固有名詞）、COMMON_NOUN（普通名詞）、VERB（動詞）、ADJECTIVE（形容詞）、SUFFIX（語尾）のいずれか。"""
 
     PROPER_NOUN = "PROPER_NOUN"
     COMMON_NOUN = "COMMON_NOUN"
