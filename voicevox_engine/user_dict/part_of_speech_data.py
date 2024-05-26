@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from dataclasses import dataclass
 
 from ..model import USER_DICT_MAX_PRIORITY, USER_DICT_MIN_PRIORITY, WordTypes
 
@@ -6,18 +6,17 @@ MIN_PRIORITY = USER_DICT_MIN_PRIORITY
 MAX_PRIORITY = USER_DICT_MAX_PRIORITY
 
 
-class PartOfSpeechDetail(BaseModel):
+@dataclass(frozen=True)
+class PartOfSpeechDetail:
     """品詞ごとの情報"""
 
-    part_of_speech: str = Field(title="品詞")
-    part_of_speech_detail_1: str = Field(title="品詞細分類1")
-    part_of_speech_detail_2: str = Field(title="品詞細分類2")
-    part_of_speech_detail_3: str = Field(title="品詞細分類3")
-    # context_idは辞書の左・右文脈IDのこと
-    # https://github.com/VOICEVOX/open_jtalk/blob/427cfd761b78efb6094bea3c5bb8c968f0d711ab/src/mecab-naist-jdic/_left-id.def # noqa
-    context_id: int = Field(title="文脈ID")
-    cost_candidates: list[int] = Field(title="コストのパーセンタイル")
-    accent_associative_rules: list[str] = Field(title="アクセント結合規則の一覧")
+    part_of_speech: str  # 品詞
+    part_of_speech_detail_1: str  # 品詞細分類1
+    part_of_speech_detail_2: str  # 品詞細分類2
+    part_of_speech_detail_3: str  # 品詞細分類3
+    context_id: int  # 文脈ID（辞書の左・右文脈ID）https://github.com/VOICEVOX/open_jtalk/blob/427cfd761b78efb6094bea3c5bb8c968f0d711ab/src/mecab-naist-jdic/_left-id.def # noqa
+    cost_candidates: list[int]  # コストのパーセンタイル
+    accent_associative_rules: list[str]  # アクセント結合規則の一覧
 
 
 part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {
