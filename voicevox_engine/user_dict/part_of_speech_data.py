@@ -1,9 +1,8 @@
 from dataclasses import dataclass
+from enum import Enum
 
-from ..model import USER_DICT_MAX_PRIORITY, USER_DICT_MIN_PRIORITY, WordTypes
-
-MIN_PRIORITY = USER_DICT_MIN_PRIORITY
-MAX_PRIORITY = USER_DICT_MAX_PRIORITY
+MIN_PRIORITY = 0
+MAX_PRIORITY = 10
 
 
 @dataclass(frozen=True)
@@ -17,6 +16,18 @@ class PartOfSpeechDetail:
     context_id: int  # 文脈ID（辞書の左・右文脈ID）https://github.com/VOICEVOX/open_jtalk/blob/427cfd761b78efb6094bea3c5bb8c968f0d711ab/src/mecab-naist-jdic/_left-id.def # noqa
     cost_candidates: list[int]  # コストのパーセンタイル
     accent_associative_rules: list[str]  # アクセント結合規則の一覧
+
+
+class WordTypes(str, Enum):
+    """
+    fastapiでword_type引数を検証する時に使用するクラス
+    """
+
+    PROPER_NOUN = "PROPER_NOUN"
+    COMMON_NOUN = "COMMON_NOUN"
+    VERB = "VERB"
+    ADJECTIVE = "ADJECTIVE"
+    SUFFIX = "SUFFIX"
 
 
 part_of_speech_data: dict[WordTypes, PartOfSpeechDetail] = {

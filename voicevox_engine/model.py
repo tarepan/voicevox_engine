@@ -5,6 +5,7 @@ from typing import Any
 from pydantic import BaseModel, Field, StrictStr, validator
 
 from .metas.Metas import Speaker, SpeakerInfo
+from .user_dict.part_of_speech_data import MAX_PRIORITY, MIN_PRIORITY
 
 
 class Mora(BaseModel):
@@ -204,19 +205,13 @@ class InstalledLibraryInfo(BaseLibraryInfo):
     uninstallable: bool = Field(title="アンインストール可能かどうか")
 
 
-USER_DICT_MIN_PRIORITY = 0
-USER_DICT_MAX_PRIORITY = 10
-
-
 class UserDictWord(BaseModel):
     """
     辞書のコンパイルに使われる情報
     """
 
     surface: str = Field(title="表層形")
-    priority: int = Field(
-        title="優先度", ge=USER_DICT_MIN_PRIORITY, le=USER_DICT_MAX_PRIORITY
-    )
+    priority: int = Field(title="優先度", ge=MIN_PRIORITY, le=MAX_PRIORITY)
     context_id: int = Field(title="文脈ID", default=1348)
     part_of_speech: str = Field(title="品詞")
     part_of_speech_detail_1: str = Field(title="品詞細分類1")
@@ -296,18 +291,6 @@ class UserDictWord(BaseModel):
                 )
             )
         return mora_count
-
-
-class WordTypes(str, Enum):
-    """
-    fastapiでword_type引数を検証する時に使用するクラス
-    """
-
-    PROPER_NOUN = "PROPER_NOUN"
-    COMMON_NOUN = "COMMON_NOUN"
-    VERB = "VERB"
-    ADJECTIVE = "ADJECTIVE"
-    SUFFIX = "SUFFIX"
 
 
 class SupportedFeaturesInfo(BaseModel):
