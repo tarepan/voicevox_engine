@@ -48,14 +48,7 @@ part_of_speech_data: dict[WordTypes, _PartOfSpeechDetail] = {
             9110,
             14176,
         ],
-        accent_associative_rules=[
-            "*",
-            "C1",
-            "C2",
-            "C3",
-            "C4",
-            "C5",
-        ],
+        accent_associative_rules=["*", "C1", "C2", "C3", "C4", "C5"],
     ),
     WordTypes.COMMON_NOUN: _PartOfSpeechDetail(
         part_of_speech="名詞",
@@ -76,14 +69,7 @@ part_of_speech_data: dict[WordTypes, _PartOfSpeechDetail] = {
             8979,
             15001,
         ],
-        accent_associative_rules=[
-            "*",
-            "C1",
-            "C2",
-            "C3",
-            "C4",
-            "C5",
-        ],
+        accent_associative_rules=["*", "C1", "C2", "C3", "C4", "C5"],
     ),
     WordTypes.VERB: _PartOfSpeechDetail(
         part_of_speech="動詞",
@@ -104,9 +90,7 @@ part_of_speech_data: dict[WordTypes, _PartOfSpeechDetail] = {
             8771,
             13433,
         ],
-        accent_associative_rules=[
-            "*",
-        ],
+        accent_associative_rules=["*"],
     ),
     WordTypes.ADJECTIVE: _PartOfSpeechDetail(
         part_of_speech="形容詞",
@@ -127,9 +111,7 @@ part_of_speech_data: dict[WordTypes, _PartOfSpeechDetail] = {
             7250,
             10001,
         ],
-        accent_associative_rules=[
-            "*",
-        ],
+        accent_associative_rules=["*"],
     ),
     WordTypes.SUFFIX: _PartOfSpeechDetail(
         part_of_speech="名詞",
@@ -150,13 +132,6 @@ part_of_speech_data: dict[WordTypes, _PartOfSpeechDetail] = {
             13622,
             15847,
         ],
-        accent_associative_rules=[
-            "*",
-            "C1",
-            "C2",
-            "C3",
-            "C4",
-            "C5",
-        ],
+        accent_associative_rules=["*", "C1", "C2", "C3", "C4", "C5"],
     ),
 }
