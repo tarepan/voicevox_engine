@@ -245,8 +245,8 @@ def full_context_labels_to_accent_phrases(
         if not is_pau:
             pause_groups.append(list(labels))
 
-    for i_pause_group, pause_group_labels in enumerate(pause_groups):
-        is_last_pause_group = i_pause_group == len(pause_groups) - 1
+    for pause_group_index, pause_group_labels in enumerate(pause_groups):
+        is_last_pause_group = pause_group_index == len(pause_groups) - 1
 
         # ラベルをブレスグループとアクセント句のインデックスで区切ってグルーピングする
         accent_groups: list[list[_Label]] = []
@@ -257,8 +257,8 @@ def full_context_labels_to_accent_phrases(
             accent_groups.append(list(_accent_labels))
 
         # アクセント句を生成する
-        for i_accent_phrase, accent_labels in enumerate(accent_groups):
-            is_last_accent_phrase = i_accent_phrase == len(accent_groups) - 1
+        for accent_phrase_index, accent_labels in enumerate(accent_groups):
+            is_last_accent_phrase = accent_phrase_index == len(accent_groups) - 1
             with_pau = is_last_accent_phrase and not is_last_pause_group
             accent_phrase = _generate_accent_phrase(accent_labels, with_pau=with_pau)
             accent_phrases.append(accent_phrase)
